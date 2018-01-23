@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Editor</title>
+
+    <style>
+      div .line {
+        background-color: #000;
+        white-space: pre-wrap;
+      }
+      .code {
+        font-family: "Monaco", "Menlo", monospace;
+        font-size: 10pt;
+      }
+      .text {
+        color: #d8d8f0;
+      }
+      .punctuation {
+        color: #f0a870;
+      }
+      .numeric {
+        color: #80ffa0;
+      }
+    </style> 
+  </head>
+  <body>
+    <script>
+      // You can also require other files to run in this process
+      let render = require('./renderer.js')
+
+      function update() {
+        let codeLines = document.getElementById("input").value.split(/\r?\n/)
+        let context = {}
+        let lines = []
+
+        for (let lineOfCode of codeLines) {
+          const result = render.GeneralLanguage.tokenizer(lineOfCode, context);
+          lines.push(result.line);
+          context = result.previousLineContext;
+        }
+
+        let html = ""
+        for (let line of lines) {
+          html += "<div class=\"line\">"
+          for (let token of line.tokens) {
+            html += "<span class=\"code " + token.type + "\">" + token.text + "</span>"
+          }
+          html += "</div>"
+        }
+
+        document.getElementById("output").innerHTML = html;
+      }
+    </script>
+
+    <h1>Hello World!</h1>
+    <!-- All of the Node.js APIs are available in this renderer process. -->
+    We are using Node.js <script>document.write(process.versions.node)</script>,
+    Chromium <script>document.write(process.versions.chrome)</script>,
+    and Electron <script>document.write(process.versions.electron)</script>.
+
+    <textarea id="input" rows="4" cols="85" onkeyup="update()">
+static characterType(character = " ") {
+</textarea>
+
+    <div id="output"></div>
+
+    
+  </body>
+</html>
