@@ -82,60 +82,60 @@ class GeneralLanguage {
             {} // context for next line
         );
     }
+
+    public static readonly CHARACTER_TYPE = {
+        white: "white",
+        numeric: "numeric",
+        text: "text",
+        punctuation: "punctuation"
+    };
+
+    public static readonly MULTICHAR_OPERATORS = [
+        "...",
+        "++",
+        "--",
+        "**",
+        ">>>=",
+        "<<=",
+        ">>=",
+        "<<",
+        ">>",
+        "<<<",
+        ">>>",
+        ">=",
+        "<=",
+        "===",
+        "!==",
+        "==",
+        "!=",
+        "&&",
+        "||",
+        "+=",
+        "-=",
+        "*=",
+        "/=",
+        "%=",
+        "&=",
+        "|=",
+        "^="
+    ];
+
+    public static TokenizerResult = class {
+        constructor(public line, public previousLineContext) {
+            this.line = line;
+            this.previousLineContext = previousLineContext;
+        }
+
+        toString() {
+            return this.line.tokens
+                .map(token => '"' + token.text + '"/' + token.type)
+                .join(", ");
+        }
+    }
 }
 
-GeneralLanguage.CHARACTER_TYPE = {
-    white: "white",
-    numeric: "numeric",
-    text: "text",
-    punctuation: "punctuation"
-};
-
-GeneralLanguage.MULTICHAR_OPERATORS = [
-    "...",
-    "++",
-    "--",
-    "**",
-    ">>>=",
-    "<<=",
-    ">>=",
-    "<<",
-    ">>",
-    "<<<",
-    ">>>",
-    ">=",
-    "<=",
-    "===",
-    "!==",
-    "==",
-    "!=",
-    "&&",
-    "||",
-    "+=",
-    "-=",
-    "*=",
-    "/=",
-    "%=",
-    "&=",
-    "|=",
-    "^="
-];
-
-GeneralLanguage.TokenizerResult = class {
-    constructor(line, previousLineContext) {
-        this.line = line;
-        this.previousLineContext = previousLineContext;
-    }
-
-    toString() {
-        return this.line.tokens
-            .map(token => '"' + token.text + '"/' + token.type)
-            .join(", ");
-    }
-};
-
 class Token {
-    constructor(text, column = 0, type = "unknown") {
+    constructor(public text, public column = 0, public type = "unknown") {
         assert(
             _.isString(text) && text.length > 0,
             "Token cannot have empty text"
@@ -164,7 +164,7 @@ class Token {
 }
 
 class Line {
-    constructor(tokens = []) {
+    constructor(public tokens = []) {
         this.tokens = tokens;
     }
 
