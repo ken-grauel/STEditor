@@ -5,21 +5,28 @@
 const _ = require("lodash");
 const assert = require("assert");
 
-class GeneralLanguage {
+enum CharacterType {
+    white,
+    numeric,
+    text,
+    punctuation
+};
+
+export class GeneralLanguage {
     constructor() {
         throw "Can't instantiate GeneralLanguage";
     }
 
     // todo lookback for periods in numbers?
-    static characterType(character = " ") {
+    static characterType(character: string = " "): CharacterType {
         let unicode = character.charCodeAt(0);
 
         if (unicode <= 32) {
-            return this.CHARACTER_TYPE.white;
+            return CharacterType.white;
         }
 
         if (unicode >= 48 && unicode <= 57) {
-            return this.CHARACTER_TYPE.numeric;
+            return CharacterType.numeric;
         }
 
         if (
@@ -27,20 +34,20 @@ class GeneralLanguage {
             (unicode >= 65 && unicode <= 90) || // capital letters
             (unicode >= 97 && unicode <= 122) // lowercase letters
         ) {
-            return this.CHARACTER_TYPE.text;
+            return CharacterType.text;
         }
 
-        return this.CHARACTER_TYPE.punctuation;
+        return CharacterType.punctuation;
     }
 
-    static tokenizer(line = "", previousLineContext = {}) {
+    static tokenizer(line: String = "", previousLineContext: any = null) {
         let index = 0;
         let tokens = [];
 
         while (index < line.length) {
             let charType = this.characterType(line[index]);
 
-            if (charType !== this.CHARACTER_TYPE.punctuation) {
+            if (charType !== CharacterType.punctuation) {
                 let afterTokenIndex = index + 1;
 
                 while (
@@ -51,11 +58,7 @@ class GeneralLanguage {
                 }
 
                 tokens.push(
-                    new Token(
-                        line.substring(index, afterTokenIndex),
-                        index,
-                        charType
-                    )
+                    new Token(line.substring(index, afterTokenIndex))
                 );
 
                 index = afterTokenIndex;
@@ -70,7 +73,7 @@ class GeneralLanguage {
                 }
 
                 tokens.push(
-                    new Token(line.substr(index, tokenLength), index, charType)
+                    new Token(line.substr(index, tokenLength))
                 );
 
                 index += tokenLength;
@@ -82,13 +85,6 @@ class GeneralLanguage {
             {} // context for next line
         );
     }
-
-    public static readonly CHARACTER_TYPE = {
-        white: "white",
-        numeric: "numeric",
-        text: "text",
-        punctuation: "punctuation"
-    };
 
     public static readonly MULTICHAR_OPERATORS = [
         "...",
@@ -134,28 +130,13 @@ class GeneralLanguage {
     }
 }
 
-class Token {
-    constructor(public text, public column = 0, public type = "unknown") {
-        assert(
-            _.isString(text) && text.length > 0,
-            "Token cannot have empty text"
-        );
-        assert(
-            _.isNumber(column) && column >= 0,
-            "Column must be nonnegative integer"
-        );
-
+export class Token {
+    constructor(public text: String) {
         this.text = text;
-        this.column = column;
-        this.type = type;
     }
 
     get length() {
         return this.text.length;
-    }
-
-    get nextColumn() {
-        return this.text.length + this.column;
     }
 
     toString() {
@@ -163,8 +144,8 @@ class Token {
     }
 }
 
-class Line {
-    constructor(public tokens = []) {
+export class Line {
+    constructor(public tokens: Token[] = []) {
         this.tokens = tokens;
     }
 
@@ -177,6 +158,4 @@ class Line {
     }
 }
 
-exports.Line = Line;
-exports.Token = Token;
-exports.GeneralLanguage = GeneralLanguage;
+
