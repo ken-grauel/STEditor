@@ -2,15 +2,25 @@
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
 
-const _ = require("lodash");
-const assert = require("assert");
-
-enum CharacterType {
+export enum CharacterType {
     white,
     numeric,
     text,
     punctuation
 };
+
+export class TokenizerResult {
+    constructor(public line, public previousLineContext) {
+        this.line = line;
+        this.previousLineContext = previousLineContext;
+    }
+
+    toString() {
+        return this.line.tokens
+            .map(token => '"' + token.text + '"/' + token.type)
+            .join(", ");
+    }
+}
 
 export class GeneralLanguage {
     constructor() {
@@ -40,7 +50,12 @@ export class GeneralLanguage {
         return CharacterType.punctuation;
     }
 
-    static tokenizer(line: String = "", previousLineContext: any = null) {
+    static tokenizer(
+        line: String = "",
+        previousLineContext: any = null
+    )
+        : TokenizerResult 
+    {
         let index = 0;
         let tokens = [];
 
@@ -80,9 +95,9 @@ export class GeneralLanguage {
             }
         }
 
-        return new this.TokenizerResult(
+        return new TokenizerResult(
             new Line(tokens),
-            {} // context for next line
+            null
         );
     }
 
@@ -116,18 +131,7 @@ export class GeneralLanguage {
         "^="
     ];
 
-    public static TokenizerResult = class {
-        constructor(public line, public previousLineContext) {
-            this.line = line;
-            this.previousLineContext = previousLineContext;
-        }
-
-        toString() {
-            return this.line.tokens
-                .map(token => '"' + token.text + '"/' + token.type)
-                .join(", ");
-        }
-    }
+    
 }
 
 export class Token {
