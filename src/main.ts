@@ -1,15 +1,15 @@
-import * as electron  from "electron";
+import * as electron from "electron";
 const app = electron.app;
 
 // Module to create native browser window.
-import {BrowserWindow} from "electron"
+import { BrowserWindow } from "electron";
 
 const path = require("path");
 const url = require("url");
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let mainWindow: BrowserWindow| null = null;
+let mainWindow: BrowserWindow | null = null;
 
 function createWindow() {
     // Create the browser window.

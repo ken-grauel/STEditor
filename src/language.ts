@@ -1,6 +1,4 @@
-
-import {Token, TokenType} from "./document"
-
+import { Token, TokenType, Line } from "./document";
 
 export enum CharacterType {
     white,
@@ -32,31 +30,33 @@ function characterType(character: string = " "): CharacterType {
 }
 
 export interface TokenizerResult {
-    tokens: Token []
-    carryoverState: any
+    tokens: Token[];
+    carryoverState: any;
 }
 
 export interface Language {
-    tokenizer(lineText: string, carryoverState: any): TokenizerResult
+    tokenizer(lineText: string, carryoverState: any): TokenizerResult;
+    spacer(line: Line): void;
 }
 
-function characterTypeToTokenType (charType: CharacterType): TokenType{
+function characterTypeToTokenType(charType: CharacterType): TokenType {
     switch (charType) {
-        case CharacterType. white: return TokenType. white;
-        case CharacterType. numeric: return TokenType. numeric;
-        case CharacterType. text: return TokenType. identifier;
-        case CharacterType. punctuation: return TokenType.operator;
+        case CharacterType.white:
+            return TokenType.white;
+        case CharacterType.numeric:
+            return TokenType.numeric;
+        case CharacterType.text:
+            return TokenType.identifier;
+        case CharacterType.punctuation:
+            return TokenType.operator;
     }
     return TokenType.unknown;
 }
 
 const genericLanguage: Language = {
-    tokenizer: function(
-        line: String = "",
-        previousLineContext: any = null
-    ): TokenizerResult {
+    tokenizer: function(line: String = "", previousLineContext: any = null): TokenizerResult {
         let index = 0;
-        let tokens:Token []= [];
+        let tokens: Token[] = [];
 
         while (index < line.length) {
             let charType = characterType(line[index]);
@@ -71,7 +71,9 @@ const genericLanguage: Language = {
                     afterTokenIndex++;
                 }
 
-                tokens.push(new Token(index, afterTokenIndex - index, characterTypeToTokenType (charType)));
+                tokens.push(
+                    new Token(index, afterTokenIndex - index, characterTypeToTokenType(charType))
+                );
 
                 index = afterTokenIndex;
             } else {
@@ -84,7 +86,7 @@ const genericLanguage: Language = {
                     }
                 }
 
-                tokens.push(new Token(index, tokenLength, characterTypeToTokenType ( charType)));
+                tokens.push(new Token(index, tokenLength, characterTypeToTokenType(charType)));
 
                 index += tokenLength;
             }
@@ -94,8 +96,12 @@ const genericLanguage: Language = {
             tokens: tokens,
             carryoverState: null
         };
+    },
+
+    spacer: function(line: Line): string {
+        return "";
     }
-}
+};
 
 export function getLanguage(fileExtension: string): Language {
     return genericLanguage;
@@ -130,4 +136,3 @@ const MULTICHAR_OPERATORS = [
     "|=",
     "^="
 ];
-
