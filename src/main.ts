@@ -1,19 +1,19 @@
-const electron = require("electron");
+import * as electron  from "electron";
 const app = electron.app;
 
 // Module to create native browser window.
-const BrowserWindow = electron.BrowserWindow;
+import {BrowserWindow} from "electron"
 
 const path = require("path");
 const url = require("url");
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let mainWindow = null;
+let mainWindow: BrowserWindow| null = null;
 
 function createWindow() {
     // Create the browser window.
-    mainWindow = new BrowserWindow({ width: 1200, height: 900 });
+    mainWindow = new BrowserWindow({ width: 1500, height: 1200 });
 
     // and load the index.html of the app.
     mainWindow.loadURL(
@@ -25,7 +25,7 @@ function createWindow() {
     );
 
     // Open the DevTools.
-    // mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools();
 
     // Emitted when the window is closed.
     mainWindow.on("closed", function() {

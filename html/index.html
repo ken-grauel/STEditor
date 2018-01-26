@@ -29,7 +29,7 @@
     <script>
       // You can also require other files to run in this process
       let render = require('./renderer.js')
-
+/*
       function update() {
         let codeLines = document.getElementById("input").value.split(/\r?\n/)
         let context = {}
@@ -52,6 +52,7 @@
 
         document.getElementById("output").innerHTML = html;
       }
+    */
     </script>
 
     <h1>Hello World!</h1>
@@ -60,9 +61,6 @@
     Chromium <script>document.write(process.versions.chrome)</script>,
     and Electron <script>document.write(process.versions.electron)</script>.
 
-    <textarea id="input" rows="4" cols="85" onkeyup="update()">
-static characterType(character = " ") {
-</textarea>
 
     <div id="output"></div>
 
