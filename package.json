@@ -8,7 +8,7 @@
     "build": "tsc && cp html/* dist",
     "docs": "typedoc --out ./doc src",
     "start": "electron .",
-    "pretty": "prettier --write --tab-width 4 --parser typescript --print-width 100 src/*.ts"
+    "pretty": "prettier --write --tab-width 4 --parser typescript --print-width 120 src/*.ts"
   },
   "repository": "https://github.com/electron/electron-quick-start",
   "devDependencies": {

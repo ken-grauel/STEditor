@@ -12,11 +12,7 @@ export enum TokenType {
 }
 
 export class Token {
-    constructor(
-        public index: number,
-        public length: number,
-        public type: TokenType = TokenType.unknown
-    ) {
+    constructor(public index: number, public length: number, public type: TokenType = TokenType.unknown) {
         this.index = index;
         this.length = length;
         this.type = type;
@@ -64,8 +60,7 @@ export class Document {
 
     invalidateRange(initialLineIndex: number, finalLineIndex: number = initialLineIndex): void {
         for (let lineIndex = initialLineIndex; lineIndex <= finalLineIndex; lineIndex++) {
-            if (lineIndex >= 0 && lineIndex < this._lines.length)
-                this._lines[lineIndex].invalidate();
+            if (lineIndex >= 0 && lineIndex < this._lines.length) this._lines[lineIndex].invalidate();
         }
     }
 
@@ -83,13 +78,8 @@ export class Document {
         for (; index < this._lines.length; index++) {
             this._lines[index].invalidate();
             const tokenizerCarryover =
-                index === 0
-                    ? null
-                    : (this._lines[index - 1].tokenizerResult as TokenizerResult).carryoverState;
-            const tokenizerResult = this._language.tokenizer(
-                this._lines[index].text,
-                tokenizerCarryover
-            );
+                index === 0 ? null : (this._lines[index - 1].tokenizerResult as TokenizerResult).carryoverState;
+            const tokenizerResult = this._language.tokenizer(this._lines[index].text, tokenizerCarryover);
             this._lines[index].tokenizerResult = tokenizerResult;
             this._lines[index].validate();
         }
@@ -102,13 +92,7 @@ export class Document {
                 const tokenizerResult = <TokenizerResult>line.tokenizerResult;
                 callback(
                     tokenizerResult.tokens
-                        .map(
-                            token =>
-                                "[" +
-                                line.text.substr(token.index, token.length) +
-                                "]/" +
-                                TokenType[token.type]
-                        )
+                        .map(token => "[" + line.text.substr(token.index, token.length) + "]/" + TokenType[token.type])
                         .join(" ")
                 );
             }

@@ -5,12 +5,13 @@
 import { Document } from "./document";
 
 let code = "";
-code +=
-    'constructor (documentText: string = "", extensionOrLanguage: string | Language = "txt") {\n';
+code += 'constructor (documentText: string = "", extensionOrLanguage: string | Language = "txt") {\n';
 code += "    this._lines = documentText. split (/\\r?\\n/). map (lineText=>new Line(lineText));\n";
 code += '    if (typeof extensionOrLanguage=== "string") {\n';
 code += "        \n";
 code += "    }";
+code += "\n";
+code += '    (x++--<<=4)>=4?"asd":43';
 
 let doc = new Document(code, "ts");
 doc.validateAll();

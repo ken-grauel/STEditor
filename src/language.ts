@@ -64,16 +64,11 @@ const genericLanguage: Language = {
             if (charType !== CharacterType.punctuation) {
                 let afterTokenIndex = index + 1;
 
-                while (
-                    afterTokenIndex < line.length &&
-                    charType === characterType(line[afterTokenIndex])
-                ) {
+                while (afterTokenIndex < line.length && charType === characterType(line[afterTokenIndex])) {
                     afterTokenIndex++;
                 }
 
-                tokens.push(
-                    new Token(index, afterTokenIndex - index, characterTypeToTokenType(charType))
-                );
+                tokens.push(new Token(index, afterTokenIndex - index, characterTypeToTokenType(charType)));
 
                 index = afterTokenIndex;
             } else {
